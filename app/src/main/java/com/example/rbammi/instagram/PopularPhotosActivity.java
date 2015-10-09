@@ -56,6 +56,7 @@ public class PopularPhotosActivity extends AppCompatActivity {
                             InstagramPhoto photo = new InstagramPhoto();
                             JSONObject photoObj = photoJson.getJSONObject(i);
                             photo.username  = photoObj.getJSONObject("user").getString("username");
+                            photo.userImgUrl = photoObj.getJSONObject("user").getString("profile_picture");
                             photo.caption = photoObj.getJSONObject("caption").getString("text");
                             photo.imgUrl = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                             photo.imgHeight = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("height");

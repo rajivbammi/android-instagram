@@ -5,6 +5,7 @@ package com.example.rbammi.instagram;
  */
 public class InstagramPhoto {
     public String username;
+    public String userImgUrl;
     public String imgUrl;
     public String caption;
     public String imgHeight;
