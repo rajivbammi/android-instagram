@@ -44,10 +44,12 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
 
 
         ivProfileImg.setImageResource(0);
-        Picasso.with(getContext()).load(photo.userImgUrl).into(ivProfileImg);
+        Picasso.with(getContext()).load(photo.userImgUrl).transform(new CircleTransform()).into(ivProfileImg);
         return convertView;
 
     }
+
+    // Utility functions.
     public String getRelativeTime(String timestamp) {
         Long timeVal = Long.parseLong(timestamp) * 1000;
         String timeStr = DateUtils.getRelativeTimeSpanString(timeVal, System.currentTimeMillis(),
