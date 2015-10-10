@@ -1,6 +1,7 @@
 package com.example.rbammi.instagram;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +26,7 @@ public class PopularPhotosActivity extends AppCompatActivity {
     private String instaURL = "https://api.instagram.com/v1/media/popular?client_id=" + CLIENT_ID;
     private ArrayList<InstagramPhoto> photos;
     private InstagramPhotosAdapter photosAdapter;
+    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,10 +35,28 @@ public class PopularPhotosActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         photos = new ArrayList<>();
         photosAdapter = new InstagramPhotosAdapter(this, photos);
         ListView lvPhotos = (ListView) findViewById(R.id.lvPhotos);
         lvPhotos.setAdapter(photosAdapter);
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchPhotosData();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         fetchPhotosData();
     }
 
@@ -46,9 +66,11 @@ public class PopularPhotosActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     //super.onSuccess(statusCode, headers, response);
+                    Log.i("DEBUG", "inside success - fetching data");
                     Log.i("DEBUG", response.toString());
                     // Decode item and convert into Java object.
                     JSONArray photoJson = null;
+                    photos.clear();
                     try{
                         photoJson = response.getJSONArray("data");
 
@@ -68,6 +90,7 @@ public class PopularPhotosActivity extends AppCompatActivity {
                         Log.i("Error", "Unable to parse the feed", e);
                     }
                     // Update the list view
+                    swipeContainer.setRefreshing(false);
                     photosAdapter.notifyDataSetChanged();
                 }
                 @Override
