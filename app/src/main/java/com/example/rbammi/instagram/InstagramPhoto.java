@@ -10,4 +10,5 @@ public class InstagramPhoto {
     public String caption;
     public String imgHeight;
     public String likesCount;
+    public String timestamp;
 }

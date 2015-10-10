@@ -61,6 +61,7 @@ public class PopularPhotosActivity extends AppCompatActivity {
                             photo.imgUrl = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                             photo.imgHeight = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("height");
                             photo.likesCount = photoObj.getJSONObject("likes").getString("count");
+                            photo.timestamp = photoObj.getString("created_time");
                             photos.add(photo);
                         }
                     } catch(JSONException e) {

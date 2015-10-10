@@ -1,6 +1,7 @@
 package com.example.rbammi.instagram;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +31,13 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
         ImageView ivphoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
         TextView tvusername = (TextView) convertView.findViewById(R.id.tvUsername);
         ImageView ivProfileImg = (ImageView) convertView.findViewById(R.id.ivProfileImg);
+        TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
 
         tvcaption.setText(photo.caption);
         tvusername.setText(photo.username);
+
+        String timeStr = getRelativeTime(photo.timestamp);
+        tvTime.setText(timeStr);
 
         ivphoto.setImageResource(0);
         Picasso.with(getContext()).load(photo.imgUrl).into(ivphoto);
@@ -43,6 +48,15 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
         return convertView;
 
     }
+    public String getRelativeTime(String timestamp) {
+        Long timeVal = Long.parseLong(timestamp) * 1000;
+        String timeStr = DateUtils.getRelativeTimeSpanString(timeVal, System.currentTimeMillis(),
+                DateUtils.SECOND_IN_MILLIS).toString();
+        return timeStr;
+    }
+
 }
+
+
 
 
