@@ -39,8 +39,10 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
             public void onClick(View v) {
                 //v.findViewById()
                 System.out.println("wow!" + position);
+
             }
         });
+
         TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
         ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
         TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);

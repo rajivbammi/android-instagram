@@ -37,6 +37,18 @@
         android:layout_alignBottom="@id/tvUsername" />
 
     <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/ivTimeImg"
+        android:layout_alignTop="@id/tvUsername"
+        android:layout_alignBottom="@id/tvUsername"
+        android:gravity="center"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="1dp"
+        android:layout_toLeftOf="@id/tvTime"
+        android:src="@drawable/time_icon" />
+
+    <ImageView
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,11 +60,21 @@
         android:layout_below="@+id/ivProfileImg"
         android:layout_alignParentStart="true" />
 
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/ivLikeImg"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/ivPhoto"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="1dp"
+        android:src="@drawable/like_icon" />
+
     <TextView
-        android:layout_marginLeft="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dummy_like"
+        android:layout_toRightOf="@id/ivLikeImg"
         android:id="@+id/tvLike"
         android:textSize="12sp"
         android:layout_below="@+id/ivPhoto"
@@ -102,4 +124,5 @@
         android:textSize="12sp"
         android:layout_marginBottom="10dp"
         android:textColor="@color/blue_links"/>
+
 </RelativeLayout>
