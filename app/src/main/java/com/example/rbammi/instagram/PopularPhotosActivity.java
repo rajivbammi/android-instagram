@@ -57,7 +57,9 @@ public class PopularPhotosActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        fetchPhotosData();
+        try {
+            fetchPhotosData();
+        } catch(Error e) { System.out.println("Calling me " + e);}
     }
 
 

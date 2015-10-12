@@ -67,17 +67,17 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
                 .into(ivProfileImg);
 
 
-        // Add and show only 3 comments.
-        int MAX_COMMENTS_TO_DISPLAY = 3;
-        // Create comments view and show it.
-        LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
-        list.removeAllViews();
-        for(int i=0; i< MAX_COMMENTS_TO_DISPLAY; i++) {
-            TextView tvDyncComment = new TextView(getContext());
-            tvDyncComment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-            tvDyncComment.setText((i + 1) + ". " + photo.commentList.get(i).cText);
-            list.addView(tvDyncComment);
-        }
+             //Add and show only 3 comments.
+            int MAX_COMMENTS_TO_DISPLAY = 3;
+            // Create comments view and show it.
+            LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
+            list.removeAllViews();
+            for (int i = 0; i < MAX_COMMENTS_TO_DISPLAY; i++) {
+                TextView tvDyncComment = new TextView(getContext());
+                tvDyncComment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+                tvDyncComment.setText((i + 1) + ". " + photo.commentList.get(i).cText);
+                list.addView(tvDyncComment);
+            }
         return convertView;
     }
 
