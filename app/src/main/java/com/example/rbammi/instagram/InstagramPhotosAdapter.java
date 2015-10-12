@@ -2,11 +2,13 @@ package com.example.rbammi.instagram;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,31 +24,61 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        InstagramPhoto photo = getItem(position);
+    public View getView(final int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_photo, parent, false);
         }
-        TextView tvcaption = (TextView) convertView.findViewById(R.id.tvCaption);
-        ImageView ivphoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
-        TextView tvusername = (TextView) convertView.findViewById(R.id.tvUsername);
+
+        // Creating a photo object.
+        InstagramPhoto photo = getItem(position);
+
+        // Variables for views.
+        TextView tvComment = (TextView) convertView.findViewById(R.id.tvComment);
+        tvComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //v.findViewById()
+                System.out.println("wow!" + position);
+            }
+        });
+        TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
+        ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
+        TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
         ImageView ivProfileImg = (ImageView) convertView.findViewById(R.id.ivProfileImg);
         TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
 
-        tvcaption.setText(photo.caption);
-        tvusername.setText(photo.username);
+        // Setting up views value
+        tvCaption.setText(photo.caption);
+        tvUsername.setText(photo.username);
+        tvComment.setText("View All " + photo.commentCount + " Comments>>");
 
         String timeStr = getRelativeTime(photo.timestamp);
         tvTime.setText(timeStr);
 
-        ivphoto.setImageResource(0);
-        Picasso.with(getContext()).load(photo.imgUrl).into(ivphoto);
-
+        ivPhoto.setImageResource(0);
+        Picasso.with(getContext())
+                .load(photo.imgUrl)
+                .into(ivPhoto);
 
         ivProfileImg.setImageResource(0);
-        Picasso.with(getContext()).load(photo.userImgUrl).transform(new CircleTransform()).into(ivProfileImg);
-        return convertView;
+        Picasso.with(getContext())
+                .load(photo.userImgUrl)
+                .transform(new CircleTransform())
+                .into(ivProfileImg);
 
+
+        // Add and show only 3 comments.
+        int MAX_COMMENTS_TO_DISPLAY = 3;
+        // Create comments view and show it.
+        LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
+        list.removeAllViews();
+        for(int i=0; i< MAX_COMMENTS_TO_DISPLAY; i++) {
+            TextView tvDyncComment = new TextView(getContext());
+            tvDyncComment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            tvDyncComment.setText((i + 1) + ". " + photo.commentList.get(i).cText);
+            list.addView(tvDyncComment);
+        }
+        return convertView;
     }
 
     // Utility functions.

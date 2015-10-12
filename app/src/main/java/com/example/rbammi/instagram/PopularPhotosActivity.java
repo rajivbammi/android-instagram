@@ -60,45 +60,62 @@ public class PopularPhotosActivity extends AppCompatActivity {
         fetchPhotosData();
     }
 
+
+
     public void fetchPhotosData() {
         AsyncHttpClient client = new AsyncHttpClient();
-            client.get(instaURL, null, new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    //super.onSuccess(statusCode, headers, response);
-                    Log.i("DEBUG", "inside success - fetching data");
-                    Log.i("DEBUG", response.toString());
-                    // Decode item and convert into Java object.
-                    JSONArray photoJson = null;
-                    photos.clear();
-                    try{
-                        photoJson = response.getJSONArray("data");
+        client.get(instaURL, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                //super.onSuccess(statusCode, headers, response);
+                Log.i("DEBUG", "inside success - fetching data");
+                Log.i("DEBUG", response.toString());
+                // Decode item and convert into Java object.
+                JSONArray photoJson = null;
+                photos.clear();
+                try {
+                    photoJson = response.getJSONArray("data");
 
-                        for (int i = 0; i < photoJson.length(); i++) {
-                            InstagramPhoto photo = new InstagramPhoto();
-                            JSONObject photoObj = photoJson.getJSONObject(i);
-                            photo.username  = photoObj.getJSONObject("user").getString("username");
-                            photo.userImgUrl = photoObj.getJSONObject("user").getString("profile_picture");
-                            photo.caption = photoObj.getJSONObject("caption").getString("text");
-                            photo.imgUrl = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
-                            photo.imgHeight = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("height");
-                            photo.likesCount = photoObj.getJSONObject("likes").getString("count");
-                            photo.timestamp = photoObj.getString("created_time");
-                            photos.add(photo);
+                    for (int i = 0; i < photoJson.length(); i++) {
+                        InstagramPhoto photo = new InstagramPhoto();
+                        JSONObject photoObj = photoJson.getJSONObject(i);
+                        photo.username = photoObj.getJSONObject("user").getString("username");
+                        photo.userImgUrl = photoObj.getJSONObject("user").getString("profile_picture");
+                        photo.caption = photoObj.getJSONObject("caption").getString("text");
+                        photo.imgUrl = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
+                        photo.imgHeight = photoObj.getJSONObject("images").getJSONObject("standard_resolution").getString("height");
+                        photo.likesCount = photoObj.getJSONObject("likes").getString("count");
+                        photo.timestamp = photoObj.getString("created_time");
+                        photo.commentCount = photoObj.getJSONObject("comments").getString("count");
+                        JSONArray commentList = photoObj.getJSONObject("comments").getJSONArray("data");
+
+                        photo.commentList = new ArrayList<InstagramComment>();
+                        JSONObject commentJson;
+                        for (int k = 0; k < commentList.length(); k++) {
+                            InstagramComment comment = new InstagramComment();
+                            commentJson = commentList.getJSONObject(k);
+                            comment.cText = commentJson.getString("text");
+                            comment.cTimestamp = commentJson.getString("created_time");
+                            comment.cUserPicUrl = commentJson.getJSONObject("from").getString("profile_picture");
+                            comment.cUsername = commentJson.getJSONObject("from").getString("username");
+                            photo.commentList.add(k, comment);
                         }
-                    } catch(JSONException e) {
-                        Log.i("Error", "Unable to parse the feed", e);
+                        photos.add(photo);
                     }
-                    // Update the list view
-                    swipeContainer.setRefreshing(false);
-                    photosAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    Log.i("Error", "Unable to parse the feed", e);
                 }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    //super.onFailure(statusCode, headers, throwable, errorResponse);
-                    Log.i("DEBUG", "Unable to fetch feed");
-                }
-            });
+                // Update the list view
+                swipeContainer.setRefreshing(false);
+                photosAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                //super.onFailure(statusCode, headers, throwable, errorResponse);
+                Log.i("DEBUG", "Unable to fetch feed");
+            }
+        });
     }
 
     @Override

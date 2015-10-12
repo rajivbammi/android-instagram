@@ -5,4 +5,5 @@
     <string name="dummy_time">\@10h</string>
     <string name="dummy_like">16358 Likes</string>
     <string name="dummy_caption">Caption 1</string>
+    <string name="commentTitle">Comments:</string>
 </resources>
