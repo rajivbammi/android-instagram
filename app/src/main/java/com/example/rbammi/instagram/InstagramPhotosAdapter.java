@@ -82,17 +82,20 @@ public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
                 .into(viewHolder.ivProfileImg);
 
 
-            // Create comments view and show it.
-            //LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
-            viewHolder.list.removeAllViews();
-            if(photo.commentList!= null) {
-              for (int i = 0; i < MAX_COMMENTS_TO_DISPLAY; i++) {
-                  TextView tvDyncComment = new TextView(getContext());
-                  tvDyncComment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                  tvDyncComment.setText((i + 1) + ". " + photo.commentList.get(i).cText);
-                  viewHolder.list.addView(tvDyncComment);
-                }
-            }
+        // Create comments view and show it.
+        //LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
+        viewHolder.list.removeAllViews();
+        int commentSize = photo.commentList.size();
+        if(commentSize > MAX_COMMENTS_TO_DISPLAY) {
+            commentSize = MAX_COMMENTS_TO_DISPLAY;
+        }
+        for (int i = 0; i < commentSize; i++) {
+            TextView tvDyncComment = new TextView(getContext());
+            tvDyncComment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+            String res = (i + 1) + ". " + photo.commentList.get(i).cText;
+            tvDyncComment.setText(res);
+            viewHolder.list.addView(tvDyncComment);
+        }
         return convertView;
     }
 
