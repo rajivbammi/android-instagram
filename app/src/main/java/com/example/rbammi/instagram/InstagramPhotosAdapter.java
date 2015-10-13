@@ -19,66 +19,77 @@ import java.util.ArrayList;
  * Created by rbammi on 10/7/15.
  */
 public class InstagramPhotosAdapter extends ArrayAdapter <InstagramPhoto> {
+
+    private static class ViewHolder {
+        TextView tvComment;
+        TextView tvUsername;
+        TextView tvTime;
+        TextView tvCaption;
+        ImageView ivPhoto;
+        ImageView ivProfileImg;
+        LinearLayout list;
+    }
+
     public InstagramPhotosAdapter(Context context, ArrayList<InstagramPhoto> objects) {
         super(context, android.R.layout.simple_list_item_1, objects);
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+        int MAX_COMMENTS_TO_DISPLAY = 3;
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_photo, parent, false);
+            viewHolder.tvComment = (TextView) convertView.findViewById(R.id.tvComment);
+            viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
+            viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
+            viewHolder.tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
+            viewHolder.ivProfileImg = (ImageView) convertView.findViewById(R.id.ivProfileImg);
+            viewHolder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+            viewHolder.list = (LinearLayout) convertView.findViewById(R.id.llComments);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         // Creating a photo object.
         InstagramPhoto photo = getItem(position);
+        String timeStr = getRelativeTime(photo.timestamp);
 
-        // Variables for views.
-        TextView tvComment = (TextView) convertView.findViewById(R.id.tvComment);
-        tvComment.setOnClickListener(new View.OnClickListener() {
+        // Setting up views value
+        viewHolder.tvCaption.setText(photo.caption);
+        viewHolder.tvUsername.setText(photo.username);
+        viewHolder.tvTime.setText(timeStr);
+
+        viewHolder.tvComment.setText("View All " + photo.commentCount + " Comments>>");
+        viewHolder.tvComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //v.findViewById()
                 System.out.println("wow!" + position);
-
             }
         });
 
-        TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
-        ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
-        TextView tvUsername = (TextView) convertView.findViewById(R.id.tvUsername);
-        ImageView ivProfileImg = (ImageView) convertView.findViewById(R.id.ivProfileImg);
-        TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
-
-        // Setting up views value
-        tvCaption.setText(photo.caption);
-        tvUsername.setText(photo.username);
-        tvComment.setText("View All " + photo.commentCount + " Comments>>");
-
-        String timeStr = getRelativeTime(photo.timestamp);
-        tvTime.setText(timeStr);
-
-        ivPhoto.setImageResource(0);
+        viewHolder.ivPhoto.setImageResource(0);
         Picasso.with(getContext())
                 .load(photo.imgUrl)
-                .into(ivPhoto);
+                .into(viewHolder.ivPhoto);
 
-        ivProfileImg.setImageResource(0);
+        viewHolder.ivProfileImg.setImageResource(0);
         Picasso.with(getContext())
                 .load(photo.userImgUrl)
                 .transform(new CircleTransform())
-                .into(ivProfileImg);
+                .into(viewHolder.ivProfileImg);
 
 
-             //Add and show only 3 comments.
-            int MAX_COMMENTS_TO_DISPLAY = 3;
             // Create comments view and show it.
-            LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
-            list.removeAllViews();
+            //LinearLayout list = (LinearLayout) convertView.findViewById(R.id.llComments);
+            viewHolder.list.removeAllViews();
             for (int i = 0; i < MAX_COMMENTS_TO_DISPLAY; i++) {
                 TextView tvDyncComment = new TextView(getContext());
                 tvDyncComment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 tvDyncComment.setText((i + 1) + ". " + photo.commentList.get(i).cText);
-                list.addView(tvDyncComment);
+                viewHolder.list.addView(tvDyncComment);
             }
         return convertView;
     }
